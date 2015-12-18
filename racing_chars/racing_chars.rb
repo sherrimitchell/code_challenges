@@ -13,16 +13,16 @@
 # INPUT SAMPLE:
 
 # Your program should accept a path to a filename as its first argument. Each line of the file is a new section of a race track.
-# 1 #########_##
-# 2 ########C_##
-# 3 #######_####
-# 4 ######_#C###
-# 5 #######_C###
-# 6 #######_####
-# 7 ######C#_###
-# 8 ######C_####
-# 9 #######_####
-# 10 #######_####
+# 1 #########_## 10 -- 12-2 prev_line = 0 
+# 2 ########C_## 9     12-3 prev_line = 10 
+# 3 #######_#### 8     12-4
+# 4 ######_#C### 9     12-3
+# 5 #######_C### 9     12-3
+# 6 #######_#### 8     12-4
+# 7 ######C#_### 7     12-5
+# 8 ######C_#### 7     12-5
+# 9 #######_#### 8     12-4
+# 10 #######_#### 8    12-4
 # OUTPUT SAMPLE:
 
 # Print out the way of passing this race track starting from the first line in the file. Use a pipe "|" for the straight, use a slash "/" for the left turn, and use a backslash "\" for the right turn.
@@ -58,6 +58,8 @@
 # right_turn == "\"; left_turn == "/"
 # 
 
+# if line contains a checkpoint then 
+
 require 'pry'
 
 # max_moves == 50
@@ -69,104 +71,26 @@ require 'pry'
 # section = line
 
 # until move = max_moves
+# each_line.split
   
 filename = ARGV[0] || 'test1.txt'
 
-# def new_dir(prev_line, index)
-#   dir = nil
-#   if index < prev_line
-#     dir = left_turn
-#   elsif index == prev_line
-#     dir = straight
-#   else
-#     dir = right_turn
-#   end
-#   dir
-# end
-
-lines = File.open(filename, "r").each_line do |line| 
-  line.empty?
-  line.next
-
-# binding.pry
-
-  puts line.strip.split(',').map.with_index { |line, i| 
-
-    
-    
-
-    right = "\\"
-
-    left = "/"
-
-    straight = "|"
-
-    gate = line.index('_')
-    check_point = line.index('C')
-    direction = straight
-    prev_line = nil
-    if prev_line = nil?
-      prev_line = gate
-    elsif condition
-      
-    end
-
-
-
-    
-
-    
-    
-
-    prev_line, next_line = line[i], line[i + 1 ]
-    prev_pos = prev_line.index(/\/|\||\\/)
-
-    right = next_line ? next_line[prev_pos + 1] : nil
-
-    left = next_line ? next_line[prev_pos - 1] : nil
-
-    straight = next_line ? next_line[prev_pos] : nil
-    
-    
-
-
-   if left == check_point
-    next_line[check_point] = '/'
-    elsif straight == check_point
-      next_line[check_point] = '|'
-    elsif right == check_point
-      next_line[check_point] = '\\'
-    elsif left == gate
-      next_line[gate] = '/'
-    elsif straight == '_'
-      next_line[gate] = '|'
-    elsif right == gate
-      next_line[gate] = '\\'
-   end
-
-      a << current_line
-      print a }
-    end
-        
-
-#     if prev_line.nil?
-#       move = gate
-#       direction = straight
-#       prev_line = gate
-#     else check_point? < prev_line = gate ? direction = left : check_point? == prev_line = check_point ? direction = straight : direction = right
-#     binding.pry 
-#     print line 
-#   end
-# } 
-# end
-#   right = "\\"
-
-#     left = "/"
-
-#     straight = "|"
-
+lines = File.open(filename).map(&:chomp)
  
+ section = lines[0]
+ path = section.index('C') || section.index('_') 
 
-
-
-
+ lines.each do |line|
+  way = line.index('C') || line.index('_')
+  case path <=> way
+  when -1
+    line[way] = "\\"
+  when 0
+    line[way] = "|"
+  when 1
+    line[way] = "/"
+  end
+  puts line
+  section = line
+  path = way
+end
